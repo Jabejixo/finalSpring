@@ -1,0 +1,19 @@
+<div th:fragment="paginationTask">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${tasks.hasPrevious} ? '': 'disabled'">
+        <a class="page-link" th:hx-get="@{/tasks(page=${tasks.number - 1}, search=${search})}" hx-target="#taskTabled" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" th:each="i : ${#numbers.sequence(1, tasks.totalPages)}" th:classappend="${tasks.number + 1 == i} ? 'active' : ''">
+        <a class="page-link" th:hx-get="@{/tasks(page=${i - 1}, search=${search})}" hx-target="#taskTabled" th:text="${i}"></a>
+      </li>
+      <li class="page-item" th:classappend="${tasks.hasNext} ? '': 'disabled'">
+        <a class="page-link" th:hx-get="@{/tasks(page=${tasks.number + 1}, search=${search})}" hx-target="#taskTabled" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

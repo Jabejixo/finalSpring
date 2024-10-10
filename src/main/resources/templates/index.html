@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Всплывающее сообщение об ошибке -->
+<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+    У тебя нет прав на выполнение этого действия!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<!-- Подключение JS Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Проверяем, есть ли параметр 'error=403' в URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error') && params.get('error') === '403') {
+        document.getElementById('errorMessage').style.display = 'block'; // Показываем сообщение
+    }
+</script>
+<a th:href="@{/roles}">РОЛИ</a>
+<a th:href="@{/users}">ПОЛЬЗОВАТЕЛИ</a>
+<a th:href="@{/projects}">ПРОЕКТЫ</a>
+<a th:href="@{/tags}">ТЭГИ</a>
+<a th:href="@{/tasks}">ЗАДАЧИ</a>
+<a th:href="@{/comments}">КОММЕНТАРИИ</a>
+<a th:href="@{/timelogs}">ЛОГИ</a>
+</body>
+</html>

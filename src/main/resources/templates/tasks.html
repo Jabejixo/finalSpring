@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Задачи</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+</head>
+<body>
+<!-- Всплывающее сообщение об ошибке -->
+<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+  У тебя нет прав на выполнение этого действия!
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<!-- Подключение JS Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Проверяем, есть ли параметр 'error=403' в URL
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('error') && params.get('error') === '403') {
+    document.getElementById('errorMessage').style.display = 'block'; // Показываем сообщение
+  }
+</script>
+<div hx-boost="true" class="container">
+  <h1 class="my-4">Задачи</h1>
+
+  <!-- Search form -->
+  <form class="form-inline mb-3">
+    <input type="text" name="search" class="form-control mr-2" placeholder="Поиск по названию или описанию..."
+           hx-get="/tasks" hx-target="#taskTabled" hx-trigger="keyup changed delay:500ms">
+  </form>
+
+  <!-- Actions -->
+  <div class="mb-3">
+    <button class="btn btn-danger" id="deleteSelected">Удалить выбранные</button>
+    <button class="btn btn-success" id="restoreSelected">Восстановить выбранные</button>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#taskModal" hx-get="/tasks/add" hx-target="#modalContent">Добавить задачу</button>
+    <button class="btn btn-secondary" hx-get="/tasks/all" hx-swap="innerHTML" hx-target="#taskTabled">Показать все задачи (включая удалённые)</button>
+  </div>
+
+  <!-- Task table -->
+  <div id="taskTabled" hx-boost="true">
+    <div hx-boost="true" id="taskTable" th:replace="fragments/taskTable :: taskTable"></div>
+  </div>
+
+  <!-- Modal for adding/editing a task -->
+  <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" id="modalContent">
+        <!-- Content will be loaded here via HTMX -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Deleting selected tasks
+  document.getElementById('deleteSelected').addEventListener('click', function() {
+    var selected = Array.from(document.querySelectorAll('input[name="taskIds"]:checked')).map(cb => cb.value);
+    if (selected.length > 0) {
+      htmx.ajax('POST', '/tasks/delete', {
+        values: {ids: selected},
+        target: '#taskTabled',
+        swap: 'outerHTML'
+      });
+    }
+  });
+
+  // Restoring selected tasks
+  document.getElementById('restoreSelected').addEventListener('click', function() {
+    var selected = Array.from(document.querySelectorAll('input[name="taskIds"]:checked')).map(cb => cb.value);
+    if (selected.length > 0) {
+      htmx.ajax('POST', '/tasks/restore', {
+        values: {ids: selected},
+        target: '#taskTabled',
+        swap: 'outerHTML'
+      });
+    }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+</body>
+</html>

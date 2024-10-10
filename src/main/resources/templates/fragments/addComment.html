@@ -1,0 +1,33 @@
+<div th:fragment="addComment">
+  <div class="modal-header">
+    <h5 class="modal-title" id="commentModalLabel">Добавить комментарий</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form th:action="@{/comments}" method="post" th:object="${comment}" hx-target="#commentTabled">
+      <div class="form-group">
+        <label for="content">Текст комментария</label>
+        <textarea class="form-control" id="content" th:field="*{content}" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="task">Задача</label>
+        <select id="task" class="form-control select2" th:field="*{task.id}" required>
+          <option th:each="task : ${tasks}" th:value="${task.id}" th:text="${task.title}"></option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="author">Автор</label>
+        <select id="author" class="form-control select2" th:field="*{author.id}" required>
+          <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.firstName + ' ' + user.lastName}"></option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  $('.select2').select2();
+</script>

@@ -1,0 +1,26 @@
+<div th:fragment="pagination">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${timeLogs.hasPrevious} ? '': 'disabled'">
+        <a class="page-link"
+           th:hx-get="@{/comments(page=${timeLogs.number - 1}, search=${search})}"
+           hx-target="#projectTabled" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" th:each="i : ${#numbers.sequence(1, timeLogs.totalPages)}"
+          th:classappend="${timeLogs.number + 1 == i} ? 'active' : ''">
+        <a class="page-link"
+           th:hx-get="@{/comments(page=${i - 1}, search=${search})}"
+           hx-target="#projectTabled" th:text="${i}"></a>
+      </li>
+      <li class="page-item" th:classappend="${timeLogs.hasNext} ? '': 'disabled'">
+        <a class="page-link"
+           th:hx-get="@{/comments(page=${timeLogs.number + 1}, search=${search})}"
+           hx-target="#projectTabled" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

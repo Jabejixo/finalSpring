@@ -1,0 +1,38 @@
+<div th:fragment="role-form">
+    <div class="modal-body">
+        <form th:action="${role.id != null} ? '/roles/edit/' + ${role.id} : '/roles/new'" th:object="${role}" method="post" id="roleForm">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModelModalLabel" th:text="${role.id != null} ? 'Редактировать роль' : 'Добавить роль'"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="roleName">Название роли</label>
+                    <input type="text" class="form-control" id="roleName" th:field="*{name}" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Привилегии</label>
+                    <select id="privilegeSelect" multiple="multiple" th:field="*{privileges}" class="form-control">
+                        <option th:each="privilege : ${allPrivileges}" th:value="${privilege.id}" th:text="${privilege.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#privilegeSelect').select2({
+            placeholder: 'Выберите привилегии',
+            allowClear: true
+        });
+    });
+</script>

@@ -1,0 +1,61 @@
+<div th:fragment="editTask">
+  <div class="modal-header">
+    <h5 class="modal-title" id="taskModalLabel">Изменить задачу</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form th:action="@{/tasks/update}" method="post" th:object="${task}" hx-target="#taskTabled">
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="form-group">
+        <label for="title">Название</label>
+        <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Введите название" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea class="form-control" id="description" th:field="*{description}" placeholder="Введите описание"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Статус</label>
+        <select id="status" class="form-control" th:field="*{status}" required>
+          <option th:each="status : ${T(com.example.finalproject.models.TaskStatus).values()}"
+                  th:value="${status}"
+                  th:text="${status}"></option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="project">Проект</label>
+        <select id="project" class="form-control select2" th:field="*{project.id}" required>
+          <option th:each="project : ${projects}"
+                  th:value="${project.id}"
+                  th:text="${project.name}"></option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="assignee">Исполнитель</label>
+        <select id="assignee" class="form-control select2" th:field="*{assignee.id}" required>
+          <option th:each="user : ${assignees}"
+                  th:value="${user.id}"
+                  th:text="${user.firstName + ' ' + user.lastName}"></option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="dueDate">Крайний срок</label>
+        <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  $('.select2').select2();
+</script>

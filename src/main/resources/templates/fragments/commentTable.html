@@ -1,0 +1,49 @@
+<div hx-boost="true" th:fragment="commentTable">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Выбрать</th>
+      <th>Текст комментария</th>
+      <th>Задача</th>
+      <th>Автор</th>
+      <th>Дата создания</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="comment : ${comments.content}">
+      <td><input type="checkbox" name="commentIds" th:value="${comment.id}"></td>
+      <td th:text="${comment.content}"></td>
+      <td th:text="${comment.task.title}"></td>
+      <td th:text="${comment.author.firstName + ' ' + comment.author.lastName}"></td>
+      <td th:text="${#dates.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+      <td>
+        <button class="btn btn-warning" th:hx-get="@{/comments/edit/{id}(id=${comment.id})}" data-toggle="modal" data-target="#commentModal"  hx-trigger="click" hx-swap="innerHTML" hx-target="#modalContent">Изменить</button>
+        <form th:action="@{/comments/delete/{id}(id = ${comment.id})}" hx-target="#commentTabled" method="post" onsubmit="return confirm('Вы уверены, что хотите удалить этот комментарий?');">
+          <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="mt-4" hx-boost="true">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" th:classappend="${comments.hasPrevious} ? '': 'disabled'">
+          <a class="page-link" th:hx-get="@{/comments(page=${comments.number - 1})}" hx-target="#commentTabled" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(1, comments.totalPages)}" th:classappend="${comments.number + 1 == i} ? 'active' : ''">
+          <a class="page-link" th:hx-get="@{/comments(page=${i - 1})}" hx-target="#commentTabled" th:text="${i}"></a>
+        </li>
+        <li class="page-item" th:classappend="${comments.hasNext} ? '': 'disabled'">
+          <a class="page-link" th:hx-get="@{/comments(page=${comments.number + 1})}" hx-target="#commentTabled" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

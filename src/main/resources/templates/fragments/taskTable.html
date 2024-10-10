@@ -1,0 +1,44 @@
+<div hx-boost="true" th:fragment="taskTable">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Выбрать</th>
+            <th><button hx-boost="true" class="btn btn-primary" data-sort="title">Название</button></th>
+            <th>Описание</th>
+            <th>Статус</th>
+            <th>Проект</th>
+            <th>Исполнитель</th>
+            <th>Крайний срок</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody id="tasksTable">
+        <tr th:each="task : ${tasks.content}">
+            <td><input type="checkbox" name="taskIds" th:value="${task.id}"></td>
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:text="${task.status}"></td>
+            <td th:text="${task.project.name}"></td>
+            <td th:text="${task.assignee.firstName + ' ' + task.assignee.lastName}"></td>
+            <td th:text="${#dates.format(task.dueDate, 'dd.MM.yyyy')}"></td>
+            <td>
+                <button class="btn btn-warning" th:hx-get="@{/tasks/edit/{id}(id=${task.id})}" hx-target="#modalContent">Изменить</button>
+                <script>
+                    document.body.addEventListener('htmx:afterSwap', function(event) {
+                        if (event.detail.target.id === 'modalContent') {
+                            $('#taskModal').modal('show');
+                        }
+                    });
+                </script>
+                <form th:action="@{/tasks/delete/{id}(id = ${task.id})}" hx-target="#taskTabled" method="post" onsubmit="return confirm('Вы уверены, что хотите удалить эту задачу?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-4" hx-boost="true">
+        <div th:replace="fragments/paginationTask :: paginationTask"></div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<div hx-boost="true" th:fragment="projectTable">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Select</th>
+      <th><button hx-boost="true" class="btn btn-primary" data-sort="name">Name</button></th>
+      <th>Description</th>
+      <th>Manager</th>
+      <th>Users</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="project : ${projects.content}">
+      <td><input type="checkbox" name="projectIds" th:value="${project.id}"></td>
+      <td th:text="${project.name}"></td>
+      <td th:text="${project.description}"></td>
+      <td th:text="${project.manager.firstName + ' ' + project.manager.lastName}"></td>
+      <td>
+                <span th:each="user : ${project.users}" th:text="${user.firstName + ' ' + user.lastName}"
+                      class="badge badge-info mr-1"></span>
+      </td>
+      <td>
+        <button class="btn btn-warning" th:hx-get="@{/projects/edit/{id}(id=${project.id})}"
+                hx-target="#modalContent">Edit
+        </button>
+        <script>
+          document.body.addEventListener('htmx:afterSwap', function (event) {
+            if (event.detail.target.id === 'modalContent') {
+              $('#projectModal').modal('show');
+            }
+          });
+        </script>
+        <form th:action="@{/projects/delete/{id}(id = ${project.id})}" hx-target="#projectTabled"
+              method="post"
+              onsubmit="return confirm('Вы уверены, что хотите удалить этот проект?');">
+          <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="mt-4" hx-boost="true">
+    <div th:replace="fragments/paginationProject :: paginationProject"></div>
+  </div>
+</div>

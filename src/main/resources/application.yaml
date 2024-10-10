@@ -1,0 +1,25 @@
+spring:
+  config:
+    name: finalProject
+  datasource:
+    url: jdbc:postgresql://localhost:5432/management_sys_db
+    username: management_sys_db_superuser
+    password: Aa$%ASF9L50KE
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: on
+jwt:
+  secret: acd2f1ede6a06c59f0b2ace63bcebb73d283384b5b3917725e236e14d7519cfe0bdcb72e5bf66dba31f9a758d88e230b112d770d3395df822e8420abd677ab99
+  expiration: 3600000
+  refreshExpiration: 604800000
+logging:
+  level:
+    org.springframework.security: DEBUG
+server:
+  servlet:
+    session:
+      timeout: 30m

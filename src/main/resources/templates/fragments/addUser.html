@@ -1,0 +1,45 @@
+<div th:fragment="addUser">
+  <div class="modal-header">
+    <h5 class="modal-title" id="userModalLabel">Add User</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form th:action="@{/users}" method="post" th:object="${user}" hx-target="#userTabled">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="Enter first name" required>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Enter last name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Enter email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Enter password" required>
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" class="form-control select2" th:field="*{role.id}">
+          <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="projects">Projects</label>
+        <select id="projects" class="form-control select2-multiple" th:field="*{projects}" multiple>
+          <option th:each="project : ${projects}" th:value="${project.id}" th:text="${project.name}"></option>
+        </select>
+      </div>
+      <button type="submit"  class="btn btn-primary">Save User</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  $('.select2').select2();
+</script>
